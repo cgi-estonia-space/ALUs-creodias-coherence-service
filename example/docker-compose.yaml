@@ -1,0 +1,14 @@
+version: "0.1"
+services:
+  alus-coherence-processor:
+    build: .
+    volumes:
+      - ./data:/mnt/vol
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        python processor.py --help
+        python processor.py --input /mnt/vol/input_file_location/ --output /mnt/vol/output 
+        #There is an option to pass config file to each proces
+        #python processor.py --input /mnt/vol/input_file_location/ --output /mnt/vol/output --config /mnt/vol/configfile
+        
