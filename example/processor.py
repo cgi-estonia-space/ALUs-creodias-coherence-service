@@ -2,9 +2,12 @@ import os
 import typer
 from structlog import get_logger
 from pathlib import Path
+from xml.dom.minidom import parse
 
 from eof.download import find_unique_safes
 from eof.download import download_eofs
+
+from demloader_get_from_aoi import get_from_aoi
 
 log = get_logger()
 runner_status_offset = 100
@@ -22,12 +25,11 @@ def main(
         log.error(
             "Expected 2 Sentinel-1 SAFE inputs, but %d were supplied. Coherence is calculated between pairs" % len(
                 safe_files))
-        return runner_status_offset
+        raise typer.Exit(runner_status_offset)
 
     safe_files_list = sorted(safe_files, key=lambda x: (x.date))
     orbit_types = ["precise", "restituted"]
     orbits = [None] * len(safe_files_list)
-    # reference_orbit = download_eofs(reference_scene.start_time, reference_scene.mission, )
     orbit_slot = 0
     for ds in safe_files_list:
         for ot in orbit_types:
@@ -39,7 +41,24 @@ def main(
 
     if any(o is None for o in orbits):
         log.error("Could not get the orbit files for all scenes.")
-        return runner_status_offset + 1
+        raise typer.Exit(runner_status_offset + 1)
+
+    reference_manifest = parse(safe_files_list[0].filename + "/manifest.safe")
+    reference_boundaries = reference_manifest.getElementsByTagName("gml:coordinates")[0].firstChild.data
+    boundary_points = reference_boundaries.split(" ")
+    lons = []
+    lats = []
+    for p in boundary_points:
+        items = p.split(",")
+        lons.append(float(items[1]) + 180)
+        lats.append(float(items[0]))
+
+    lons = sorted(lons)
+    lons = [x - 180 for x in lons]
+    lats = sorted(lats)
+    copdems = get_from_aoi([lons[0], lats[0], lons[3], lats[3]], 30)
+    copdem_location = "/mnt/vol/dem/"
+    copdem_paths = [copdem_location + x + ".tif" for x in copdems]
 
     polarization = ["VV"]
     dem_files = ["--dem /mnt/vol/dem/srtm_37_02.tif",
@@ -50,11 +69,9 @@ def main(
     command = f"alus-coh -r {safe_files_list[0].filename} -s {safe_files_list[1].filename} --orbit_ref {orbits[0][0]} \
               --orbit_sec {orbits[1][0]} -p {polarization[0]} --no_mask_cor --log_format_creodias -o {output_dir} \
               {dem_args}"
-    os.system(command)
-    # os.system(f"mkdir {output_dir}/my_new_product_name")
-    # os.system(f"touch {output_dir}/my_new_product_name/result.data")
-    # os.system(f"ls -R {input_dir}")
-    # os.system(f"ls -R {output_dir}")
+    res_val = os.system(command)
+    if res_val != 0:
+        raise typer.Exit(res_val)
 
 
 if __name__ == "__main__":
