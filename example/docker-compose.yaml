@@ -3,12 +3,15 @@ services:
   alus-coherence-processor:
     build: .
     volumes:
-      - ./data:/mnt/vol
+      - /mnt/vol:/mnt/vol
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
-#        python processor.py --help
-        python processor.py --input-dir /mnt/vol/input/ --output-dir /mnt/vol/output
-        #There is an option to pass config file to each proces
-        #python processor.py --input /mnt/vol/input_file_location/ --output /mnt/vol/output --config /mnt/vol/configfile
-        
+        python3 processor.py --input-dir /mnt/vol/input --output-dir /mnt/vol/output
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]

@@ -16,7 +16,7 @@ runner_status_offset = 100
 def main(
         input_dir: Path = typer.Option(...),
         output_dir: Path = typer.Option(...),
-        config_file: Path = typer.Option(...),
+        config_file: Path = typer.Option(None),
 ):
     log.info("processing", input=str(input_dir), output=str(output_dir), config=config_file)
 
@@ -27,7 +27,7 @@ def main(
                 safe_files))
         raise typer.Exit(runner_status_offset)
 
-    safe_files_list = sorted(safe_files, key=lambda x: (x.date))
+    safe_files_list = sorted(safe_files, key=lambda x: x.date)
     orbit_types = ["precise", "restituted"]
     orbits = [None] * len(safe_files_list)
     orbit_slot = 0
@@ -57,17 +57,18 @@ def main(
     lons = [x - 180 for x in lons]
     lats = sorted(lats)
     copdems = get_from_aoi([lons[0], lats[0], lons[3], lats[3]], 30)
-    copdem_location = "/mnt/vol/dem/"
+    copdem_location = str(input_dir) + "/../dem/"
     copdem_paths = [copdem_location + x + ".tif" for x in copdems]
+    log.info("COPDEMs covered %s" % str(copdem_paths))
 
     polarization = ["VV"]
-    dem_files = ["--dem /mnt/vol/dem/srtm_37_02.tif",
-                 "--dem /mnt/vol/dem/srtm_37_03.tif",
-                 "--dem /mnt/vol/dem/srtm_38_02.tif",
-                 "--dem /mnt/vol/dem/srtm_38_03.tif"]
+    dem_files = ["--dem " + copdem_location + "srtm_37_02.tif",
+                 "--dem " + copdem_location + "srtm_37_03.tif",
+                 "--dem " + copdem_location + "srtm_38_02.tif",
+                 "--dem " + copdem_location + "srtm_38_03.tif"]
     dem_args = " ".join(dem_files)
     command = f"alus-coh -r {safe_files_list[0].filename} -s {safe_files_list[1].filename} --orbit_ref {orbits[0][0]} \
-              --orbit_sec {orbits[1][0]} -p {polarization[0]} --no_mask_cor --log_format_creodias -o {output_dir} \
+              --orbit_sec {orbits[1][0]} -p {polarization[0]} --no_mask_cor -o {output_dir} \
               {dem_args}"
     res_val = os.system(command)
     if res_val != 0:
