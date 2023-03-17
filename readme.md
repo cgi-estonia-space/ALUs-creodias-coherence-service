@@ -1,4 +1,49 @@
-# Hello World Processor
+# ALUs coherence routine processor
+
+There is `data_prepare.py` that acts as a first step to compile list of aux files:
+* Copernicus 30m COG DEM tile names
+* Orbit files (from text file list - poeorb.txt and resorb.txt)
+
+Example call:\
+`data_prepare.py --input-dir /mnt/vol/input_step_a --output-dir /mnt/vol/output`
+
+An example result [file](example/data/aux.json) (stored in `--output-dir`)
+
+The processing is done by `processor.py` script.
+
+Example call:\
+`processor.py --input-dir  /mnt/vol/input_step_b --output-dir /mnt/vol/output --config-file /mnt/vol/input_step_b/arguments.txt`
+
+The [`arguments.txt` file](example/data/arguments.txt) consists either both polarisation and AOI CLI arguments for `alus-coh` binary. Or simply the
+polarisation (`--polarisation`)
+
+An example directory contents for `--input-dir` that is sufficient for processing:
+```
+arguments.txt
+Copernicus_DSM_COG_10_N49_00_E003_00_DEM.tif
+Copernicus_DSM_COG_10_N49_00_E004_00_DEM.tif
+Copernicus_DSM_COG_10_N49_00_E005_00_DEM.tif
+Copernicus_DSM_COG_10_N49_00_E006_00_DEM.tif
+Copernicus_DSM_COG_10_N49_00_E007_00_DEM.tif
+Copernicus_DSM_COG_10_N50_00_E003_00_DEM.tif
+Copernicus_DSM_COG_10_N50_00_E004_00_DEM.tif
+Copernicus_DSM_COG_10_N50_00_E005_00_DEM.tif
+Copernicus_DSM_COG_10_N50_00_E006_00_DEM.tif
+Copernicus_DSM_COG_10_N50_00_E007_00_DEM.tif
+Copernicus_DSM_COG_10_N51_00_E003_00_DEM.tif
+Copernicus_DSM_COG_10_N51_00_E004_00_DEM.tif
+Copernicus_DSM_COG_10_N51_00_E005_00_DEM.tif
+Copernicus_DSM_COG_10_N51_00_E006_00_DEM.tif
+Copernicus_DSM_COG_10_N51_00_E007_00_DEM.tif
+S1A_IW_SLC__1SDV_20210703T055050_20210703T055117_038609_048E45_35F7.SAFE
+S1A_OPER_AUX_POEORB_OPOD_20210723T121923_V20210702T225942_20210704T005942.EOF
+S1B_IW_SLC__1SDV_20210615T054959_20210615T055026_027363_0344A0_83FE.SAFE
+S1B_OPER_AUX_POEORB_OPOD_20210705T111814_V20210614T225942_20210616T005942.EOF
+```
+
+`alus-coh` also processes scenes when there is no orbital information, hence if no data is available or not needed,
+the EOF files could be left unsupplied. If only a single one is available, then it is discarded and both scenese are 
+processed with the orbital information contained in original SAFE packages.
 
 ## How to use this repository
 This repository contains sample processor docker file, docker-compose which uses the processor image and sample k8s

@@ -1,0 +1,23 @@
+{
+    "orbit": [
+        "S1A_OPER_AUX_POEORB_OPOD_20210723T121923_V20210702T225942_20210704T005942.EOF",
+        "S1B_OPER_AUX_POEORB_OPOD_20210705T111814_V20210614T225942_20210616T005942.EOF"
+    ],
+    "dem": [
+        "Copernicus_DSM_COG_10_N49_00_E003_00_DEM/Copernicus_DSM_COG_10_N49_00_E003_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N49_00_E004_00_DEM/Copernicus_DSM_COG_10_N49_00_E004_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N49_00_E005_00_DEM/Copernicus_DSM_COG_10_N49_00_E005_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N49_00_E006_00_DEM/Copernicus_DSM_COG_10_N49_00_E006_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N49_00_E007_00_DEM/Copernicus_DSM_COG_10_N49_00_E007_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N50_00_E003_00_DEM/Copernicus_DSM_COG_10_N50_00_E003_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N50_00_E004_00_DEM/Copernicus_DSM_COG_10_N50_00_E004_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N50_00_E005_00_DEM/Copernicus_DSM_COG_10_N50_00_E005_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N50_00_E006_00_DEM/Copernicus_DSM_COG_10_N50_00_E006_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N50_00_E007_00_DEM/Copernicus_DSM_COG_10_N50_00_E007_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N51_00_E003_00_DEM/Copernicus_DSM_COG_10_N51_00_E003_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N51_00_E004_00_DEM/Copernicus_DSM_COG_10_N51_00_E004_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N51_00_E005_00_DEM/Copernicus_DSM_COG_10_N51_00_E005_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N51_00_E006_00_DEM/Copernicus_DSM_COG_10_N51_00_E006_00_DEM.tif",
+        "Copernicus_DSM_COG_10_N51_00_E007_00_DEM/Copernicus_DSM_COG_10_N51_00_E007_00_DEM.tif"
+    ]
+}
